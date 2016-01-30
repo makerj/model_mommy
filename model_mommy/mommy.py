@@ -3,6 +3,7 @@ import warnings
 
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.postgres.fields import ArrayField
 import django
 if django.VERSION >= (1, 7):
     from django.apps import apps
@@ -445,6 +446,8 @@ class Mommy(object):
             generator = self.type_mapping[field.__class__]
         elif isinstance(field, GenericIPAddressField):
             generator = self._ip_generator(field)
+        elif isinstance(field, ArrayField):
+            return generators.gen_arrayfield(field, self.generate_value)
         else:
             raise TypeError('%s is not supported by mommy.' % field.__class__)
 

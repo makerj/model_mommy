@@ -165,3 +165,15 @@ def gen_content_type():
         from django.db.models import get_models
 
     return ContentType.objects.get_for_model(choice(get_models()))
+
+def gen_arrayfield(field, generate_value):
+    base = getattr(field, 'base_field', None)
+    size = field.size or 10  # currently, size is not an mandatory field
+
+    if not base:
+        raise AttributeError()
+    array = []
+    for _ in range(size):
+        array.append(generate_value(base))
+    return array
+
